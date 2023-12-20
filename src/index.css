@@ -127,6 +127,7 @@
   .col-sb { display: flex;flex-direction: column; justify-content: space-between; }
   .col { display: flex;flex-direction: column; }
   
+  .align-start { align-items: start;}
   .align-center { align-items: center;}
   .justify-end {justify-content: end;}
   
@@ -183,6 +184,18 @@
   .mg-bl-600 { margin-block: 3rem;}
   .mg-bl-700 { margin-block: 4rem;}
   .mg-bl-800 { margin-block: 6rem;}
+
+  .mg-il-100 { margin-inline: 0.5rem;}
+  .mg-il-200 { margin-inline: 1rem;}
+  .mg-il-300 { margin-inline: 1.5rem;}
+  .mg-il-400 { margin-inline: 2rem;}
+  .mg-il-500 { margin-inline: 2.5rem;}
+  .mg-il-600 { margin-inline: 3rem;}
+  .mg-il-700 { margin-inline: 4rem;}
+  .mg-il-800 { margin-inline: 6rem;}
+
+  
+  
   /* Width */
   .wd-100 { width: 1rem ;}
   .wd-150 { width: 1.25rem ;}

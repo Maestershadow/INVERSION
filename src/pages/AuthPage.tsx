@@ -1,4 +1,5 @@
-import AuthSection from "../components/AuthSection";
+import SignupSection from "../components/SignupSection";
+
 
 export default function AuthPage() {
     return <main className="container" style={{
@@ -6,7 +7,7 @@ export default function AuthPage() {
         minHeight: "100vh",
         placeContent: "center"
     }}>
-        <AuthSection />
+        <SignupSection />
 
     </main>
 }
