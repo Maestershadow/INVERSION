@@ -1,0 +1,116 @@
+
+.a11y-slider-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    margin-block: 3rem;
+    padding: 0;
+}
+
+.a11y-slider-dots>li {
+    display: block;
+    margin: 0 0.2rem;
+}
+
+.a11y-slider-dots>li>button {
+    background: #d7d0e9;
+    text-indent: -9999px;
+    width: 2.0rem;
+    height: 0.2rem;
+    padding: 0;
+}
+
+.a11y-slider-dots>li>button.active {
+
+    background: black;
+}
+
+
+.shoe-section
+{
+    display: grid;
+    grid-template-columns: 3rem auto 3rem ;
+    margin-block: 1rem;
+}
+
+
+
+.shoe-section ul
+{
+    display: flex;
+}
+
+.shoe-section ul li
+{
+    padding: 0.4rem;
+}
+
+
+
+.arrow
+{
+    position: absolute;
+    bottom: 67.5%;
+    z-index: 1;
+}
+
+.arrow:disabled
+{
+    color: var(--clr-grey);
+}
+
+#prev
+{
+    left: 0rem;
+}
+
+#next
+{
+    
+    right:0rem;
+}
+
+
+.add-tocart
+{
+    bottom: 6%;
+    right: 5%;
+    height: 2.5rem;
+    padding-inline: 0.7rem;
+    position: absolute;
+    background-color: white;
+    color: black;
+    font-size: var(--fs-100);
+    font-weight: var(--fw-semi-bold);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 500ms, background-color 500ms;
+}
+
+.shoe-content:hover  .add-tocart
+{
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.add-tocart:hover
+{
+    color: white;
+    background-color: black;
+}
+
+.add-tocart:hover > .text-almost-black
+{
+    color: rgb(236, 235, 235);
+}
+
+.horizontal-line
+{
+    width: 0.5px;
+    height: 100%;
+}

@@ -1,0 +1,111 @@
+[role="tablist"] {
+  --_width: 0.15;
+  --_visibility: hidden;
+  --_transition-time: 0ms;
+  position: relative;
+}
+
+[role="tablist"] ::after {
+  visibility: var(--_visibility);
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0rem;
+  height: 3px;
+  scale: var(--_width) 1;
+  translate: var(--_left, 0) 0;
+  transform-origin: left;
+  transition: scale var(--_transition-time), translate var(--_transition-time);
+  background: black;
+  pointer-events:  none;
+}
+
+[role="tab"] {
+  color: black;
+  background: transparent;
+  border: 0;
+  font-weight: 500;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+[role="tab"]:hover {
+  opacity: 1;
+}
+
+[role="tab"][aria-selected="true"] {
+  opacity: 1;
+}
+
+
+
+header {
+  --height: 3.5rem;
+  height: var(--height);
+  font-size: var(--fs-primary-heading);
+  font-family: var(--ff-heading);
+  font-weight: var(--fw-bold);
+  background-color: white;
+  box-shadow: 0px 1px 0px var(--clr-light-grey);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+
+.header-flyout_body {
+  display: grid;
+  visibility: hidden;
+  justify-content: center;
+  position: absolute;
+  top: var(--height);
+  left: 0;
+  right: 0;
+  background-color: white;
+  z-index: 10;
+  transition: all 250ms;
+  overflow: hidden;
+  height: 0;
+  padding-inline: 1rem;
+}
+
+
+.header-flyout_body[data-visible="true"] {
+  height: 30rem;
+  visibility: visible;
+}
+
+
+
+
+.header-flyout_body>div {
+  display: flex;
+  gap: 2rem;
+  padding-block: 2.5rem;
+  width: fit-content;
+  max-width: 65rem;
+  overflow: hidden;
+  transition: visibility 0ms;
+  visibility: hidden;
+}
+
+.header-flyout_body[data-visible="true"]>div {
+  visibility: visible;
+}
+
+.header-flyout_body > div[hidden]
+{
+  display: none;
+}
+
+
+/* .header-flyout_body::before
+{
+  position: absolute;
+  content: "";
+  z-index: -1;
+  width:100%;
+  height: 100rem;
+  backdrop-filter: blur(2px) ;
+} */
