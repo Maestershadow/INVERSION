@@ -23,5 +23,5 @@ export const db = app.firestore();
 
 if (window.location.hostname === "localhost") {
   auth.useEmulator("http://127.0.0.1:9099");
-  db.useEmulator("127.0.0.1",8082);
+  db.useEmulator("127.0.0.1",8083);
 }

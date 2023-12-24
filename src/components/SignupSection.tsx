@@ -1,45 +1,128 @@
-import { LocalUser, useAuthentication } from "../providers/authProvider";
+import { useFormik } from 'formik';
+import { useNavigate } from 'react-router-dom';
+import { useAuthentication } from '../providers/authProvider';
+import Spinner from './common/Spinner';
 
-export default function Signup() {
+type FormValues = {
+    email: string;
+    password: string;
+    confirmPassword: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+};
 
-    const authentication = useAuthentication();
+function isOver18(dateString: string) {
+    const inputDate = new Date(dateString);
+    const currentDate = new Date();
+    const differenceInMillis = currentDate.getTime() - inputDate.getTime();
+    const millisecondsInYear = 1000 * 60 * 60 * 24 * 365.25;
+    const differenceInYears = differenceInMillis / millisecondsInYear;
+    return differenceInYears > 10;
+}
 
+const validate = (values: FormValues) => {
+    const errors: FormValues = {
+        email: '',
+        password: '',
+        confirmPassword: '',
+        firstName: '',
+        lastName: '',
+        dateOfBirth: ''
+    };
 
+    if (!values.email) {
+        errors.email = 'Please enter email address';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+        errors.email = 'Invalid email address';
+    }
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
+    if (!values.password) {
+        errors.password = "Please enter password";
+    }
+    else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(values.password)) {
+        errors.password = "Please enter valid password";
+    }
 
-        const formData = new FormData(event.currentTarget);
-        const email = formData.get("email") as string;
-        const password = formData.get("password") as string;
-        const user: LocalUser = { email: email, password: password };
+    if (!values.confirmPassword) {
+        errors.confirmPassword = "Please confirm password";
+    }
+    else if (values.password !== values.confirmPassword) {
+        errors.confirmPassword = "Password doesn't match";
+    }
 
-        authentication.signup(user, () => { console.log("Hello") })
-        // auth.signin(username, () => {
-        //   // Send them back to the page they tried to visit when they were
-        //   // redirected to the login page. Use { replace: true } so we don't create
-        //   // another entry in the history stack for the login page.  This means that
-        //   // when they get to the protected page and click the back button, they
-        //   // won't end up back on the login page, which is also really nice for the
-        //   // user experience.
-        //   navigate(from, { replace: true });
-        // });
+    if (!values.firstName) {
+        errors.firstName = 'Enter first name';
+    } else if (values.firstName.length > 15) {
+        errors.firstName = 'Must be 15 characters or less';
+    }
+
+    if (!values.lastName) {
+        errors.lastName = 'Enter last name';
+    } else if (values.lastName.length > 20) {
+        errors.lastName = 'Must be 20 characters or less';
+    }
+
+    if (!values.dateOfBirth) {
+        errors.dateOfBirth = "Please select a valid date"
+    }
+    else if (!isOver18(values.dateOfBirth)) {
+        errors.dateOfBirth = "Must be over 10 years"
     }
 
 
-    return <form onSubmit={handleSubmit}>
 
-        <div className="auth-section">
+    return Object.values(errors).every(value => value.trim().length === 0) ? {} : errors;
+};
 
+export default function SignupSection() {
+    const navigate = useNavigate();
+    const auth = useAuthentication();
+
+
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+            confirmPassword: '',
+            firstName: '',
+            lastName: '',
+            dateOfBirth: '',
+        },
+        validate,
+        onSubmit: async (values) => {
+            await auth.signup(values, () => {
+                navigate("/", { replace: true })
+            })
+        },
+    });
+    return (
+        <form className='auth-section' onSubmit={formik.handleSubmit}>
             <h1 className="bold uppercase fs-md mg-bl-400">Sign Up</h1>
-            <div className="col gp-500">
+            <div className="col gp-100">
                 <div>
-                    <p>Email</p>
-                    <input type="email" name="email" />
+                    <label htmlFor='email'>Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.email}
+                    />
+                    {<div className='error-section'>{formik.touched.email && formik.errors.email ? formik.errors.email : ''}</div>}
                 </div>
                 <div>
-                    <p>Password</p>
-                    <input type="password" name="password" />
+                    <label htmlFor='password'>Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.password}
+                    />
+                    {<div className='error-section'>{formik.touched.password && formik.errors.password ? formik.errors.password : ''}</div>}
                     <div className="mg-bl-200 col gp-100">
                         <p>Minimum of 8 Characters</p>
                         <p>Uppercase, lowercase letters and one number</p>
@@ -47,54 +130,80 @@ export default function Signup() {
                     </div>
                 </div>
                 <div>
-                    <p>Confirm Password</p>
-                    <input type="password" name="confirm_password" />
+                    <label htmlFor='confirmPassword'>Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.confirmPassword} />
+                    {<div className='error-section'>{formik.touched.confirmPassword && formik.errors.confirmPassword ? formik.errors.confirmPassword : ''}</div>}
+
                 </div>
                 <div className="row gp-200">
                     <div className="wd-p-400">
-                        <p>First Name*</p>
-                        <input type="text" name="first_name" />
+                        <label htmlFor='firstName'>First Name*</label>
+                        <input
+                            id="firstName"
+                            name="firstName"
+                            type="text"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.firstName}
+                        />
+                        {<div className='error-section'>{formik.touched.firstName && formik.errors.firstName ? formik.errors.firstName : ''}</div>}
 
                     </div>
 
                     <div className="wd-p-400">
-                        <p>Last Name</p>
-                        <input type="text" name="last_name" />
+                        <label htmlFor='lastName'>Last Name*</label>
+                        <input
+                            id="lastName"
+                            name="lastName"
+                            type="text"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.lastName}
+                        />
+                        {<div className='error-section'>{formik.touched.lastName && formik.errors.lastName ? formik.errors.lastName : ''}</div>}
 
                     </div>
 
                 </div>
 
                 <div >
-                    <p>Date of Birth(MM/DD/YYYY)*</p>
-                    <input type="text" name="dob" />
+                    <label htmlFor='dateOfBirth'>Date of Birth(MM/DD/YYYY)*</label>
+                    <input type="date" name="dateOfBirth" id="dateOfBirth"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.dateOfBirth}
+                    />
+                    {<div className='error-section'>{formik.touched.dateOfBirth && formik.errors.dateOfBirth ? formik.errors.dateOfBirth : ''}</div>}
                 </div>
 
-                <div>
-                    <p>Country</p>
-                    <p className="text-grey mg-bl-100">United States</p>
-                </div>
             </div>
 
-            <div className="row-sb" >
-                <div className="row gp-100">
-                    <input type="checkbox" />
-                    <p>Remember </p>
-                </div>
-                <button className="fs-xxsm bold underline">FORGOT YOUR PASSWORD?</button>
-            </div>
+            {
+              formik.isSubmitting &&  <div className='center ht-200'>
+                    <Spinner />
+                </div> 
+            }
 
             <button type="submit" className="ht-200 bg-black text-white">Sign Up</button>
             <div className="center">
                 <div className="row gp-200">
-                    <p>Not a member?</p>
-                    <button className="bold fs-xxsm underline">SIGN IN</button>
+                    <p>Already a member?</p>
+                    <button onClick={(e) => {
+                        e.preventDefault();
+                        navigate("/auth", { replace: true })
+                    }} className="bold fs-xxsm underline">SIGN IN</button>
                 </div>
             </div>
-            <p className="text-align-c">By signing up for emails, you agree to the Inverse <a href="#">Termns of Use</a> and <a href="#">Privacy Policy</a> </p>
+            <p className="text-align-c">By signing up for emails, you agree to the Inverse <a className='underline' href="#">Terms of Use</a> and <a className='underline' href="#">Privacy Policy</a> </p>
 
-        </div> </form>
+        </form>
 
 
-
+    );
 }

@@ -12,8 +12,10 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
     "firebase": "^10.7.1",
+    "formik": "^2.4.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.49.2",
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.21.0",
     "ts-debounce": "^4.0.0"

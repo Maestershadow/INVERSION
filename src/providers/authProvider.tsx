@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { createContext, useContext, useState } from "react";
-import { auth } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 
 
 export interface LocalUser {
@@ -8,30 +8,49 @@ export interface LocalUser {
     password: string;
 }
 
+export interface UserDetails {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+}
+
 interface AuthContextType {
     user: LocalUser;
-    signup: (user: LocalUser, callback: VoidFunction) => void;
+    signup: (user: UserDetails, callback: VoidFunction) => void;
     signout: (callback: VoidFunction) => void;
 }
 
 const AuthContext = createContext<AuthContextType>(null!);
 
-export function useAuthentication()
-{
+export function useAuthentication() {
     return useContext(AuthContext);
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<LocalUser>({ email: "", password: "" });
+    const [user, setUser] = useState<UserDetails>({ email: "", password: "", firstName: "", lastName: "", dateOfBirth: "" });
 
-    const signup = (user: LocalUser, callback: VoidFunction) => {
-        callback();
-        setUser(user);
-        return createUserWithEmailAndPassword(auth, user.email, user.password);
+    const signup = async  (user: UserDetails, callback: VoidFunction) => {
+        try {
+           const credential = await createUserWithEmailAndPassword(auth, user.email, user.password);
+           await db.collection('users').doc(credential.user.uid).set({
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            dateOfBirth: user.dateOfBirth,
+            id: credential.user.uid
+           });
+           callback();
+           return "";
+        } catch (e) {
+            return "An error occurred";
+        }
+
     }
 
     const signout = (callback: VoidFunction) => {
-        setUser({ email: "", password: "" });
+        setUser({ email: "", password: "", firstName: "", lastName: "", dateOfBirth: "" });
         callback();
         return signOut(auth);
     }

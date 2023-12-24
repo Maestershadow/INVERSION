@@ -6,6 +6,8 @@ import Root from './pages/Root';
 import MainContent from './components/MainContent';
 import AuthPage from './pages/AuthPage';
 import { AuthProvider } from './providers/authProvider';
+import SigninSection from './components/SigninSection';
+import SignupSection from './components/SignupSection';
 
 
 const router = createBrowserRouter([
@@ -23,6 +25,16 @@ const router = createBrowserRouter([
   {
     path: "/auth",
     element: <AuthPage />,
+    children: [
+      {
+        index: true,
+        element: <SigninSection />
+      },
+      {
+        path: "signup",
+        element: <SignupSection />
+      }
+    ]
   }
 ]);
 

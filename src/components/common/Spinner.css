@@ -1,0 +1,39 @@
+.progress-ring__circle {
+    stroke-dasharray: 400, 400;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.left-anim {
+    animation: strokeanim-l 1s infinite;
+    stroke: rgba(0, 0, 0, 0.3);
+    stroke-dashoffset: 290;
+}
+
+.right-anim {
+    animation: strokeanim-r 1s infinite;
+    stroke: rgba(0, 0, 0, 1);
+    stroke-dashoffset: 380;
+}
+
+
+@keyframes strokeanim-r {
+    0% {
+        transform: rotate(-360deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+
+@keyframes strokeanim-l {
+    0% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}

@@ -1,5 +1,4 @@
-import SignupSection from "../components/SignupSection";
-
+import { Outlet } from "react-router-dom";
 
 export default function AuthPage() {
     return <main className="container" style={{
@@ -7,7 +6,6 @@ export default function AuthPage() {
         minHeight: "100vh",
         placeContent: "center"
     }}>
-        <SignupSection />
-
+        <Outlet />
     </main>
 }
